@@ -2,6 +2,7 @@ import base64
 import io
 import json
 import os
+from urllib.parse import urljoin
 
 import requests
 import torch.nn as nn
@@ -81,5 +82,42 @@ def search_image(request_model:search_image_request_model):
     nns = annoy_index.get_nns_by_vector(output_tensor[0],24,search_k=-1, include_distances=False)
     object_strs = [ObjectId(loaded_dict['data'][str(nns[j])]) for j in range(len(nns))]
     document = list(collection.find({'_id': {"$in":object_strs}}))
-    url_list = [doc["image_url_list"][0] for doc in document]
+    url_list = [doc["image_url_list"][0].split("/")[-1] for doc in document]
     return {"url_list":url_list}
+
+def download_image(url):
+    response = requests.get(url)
+    image = Image.open(io.BytesIO(response.content))
+    return image
+
+class get_image_request_model(BaseModel):
+    name: str = Field(description='input image name')
+
+    class Config:
+        schema_extra = {
+            'example': {
+                "name": "name",
+            }
+        }
+
+class get_image_response_model(BaseModel):
+    image: str = Field(description='image in base64 format')
+
+    class Config:
+        schema_extra = {
+            'example': {
+                "image": "sdsasdjasnakd....",
+            }
+        }
+
+@app.post("/get/image",response_model=get_image_response_model)
+def get_image(request_model:get_image_request_model):
+    # get name
+    name = request_model.name
+    # get wassabi uri
+    WASSABI_URI = os.getenv('WASSABI_URI')
+    # get image
+    image = download_image(urljoin(WASSABI_URI, name))
+    # get base64
+    image_base64 = base64.b64encode(image.tobytes()).decode("utf-8")
+    return {"image":image_base64}
