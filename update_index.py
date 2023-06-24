@@ -60,8 +60,8 @@ def perform_inference(document):
     del image
 
     # Load the pre-trained model
-    weights = models.ResNet50_Weights.IMAGENET1K_V2
-    model = models.resnet50(weights=weights)
+    weights = models.ResNet18_Weights.IMAGENET1K_V1
+    model = models.resnet18(weights=weights)
 
     model.fc = nn.Identity()
 
@@ -187,8 +187,8 @@ from annoy import AnnoyIndex
 annoy_index_path = "./annoy_index.ann"
 vector_index_path = "vector_index.h5"
 
-n_trees = 500
-dimensions = 2048
+n_trees = 10
+dimensions = 512
 metric = 'angular'
 
 annoy_index = AnnoyIndex(dimensions,metric)
