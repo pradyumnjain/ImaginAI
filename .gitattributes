@@ -1,0 +1,2 @@
+annoy_index.ann filter=lfs diff=lfs merge=lfs -text
+object_index.json filter=lfs diff=lfs merge=lfs -text
