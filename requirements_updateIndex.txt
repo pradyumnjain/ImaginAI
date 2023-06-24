@@ -1,0 +1,9 @@
+torch 
+torchvision 
+torchaudio
+annoy
+pymongo
+python-dotenv
+tqdm
+joblib
+h5py
