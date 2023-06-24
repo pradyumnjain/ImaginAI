@@ -2,6 +2,7 @@
 
 vector_index.h5
 .env
+api/__pycache__/
 
 # dependencies
 /node_modules
