@@ -6,6 +6,7 @@ import os
 import requests
 import torch.nn as nn
 from annoy import AnnoyIndex
+from bson import ObjectId
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from PIL import Image
@@ -22,10 +23,8 @@ MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
 
 # Access the desired database and collection
-db_new = client["ImaginAI"]
-collection_new = db_new["stock_data"]
-
-
+db = client["ImaginAI"]
+collection = db["stock_data"]
 
 # Load model
 weights = models.ResNet18_Weights.IMAGENET1K_V1
@@ -80,6 +79,7 @@ def search_image(request_model:search_image_request_model):
     output_tensor = model(input_tensor)
     # Get index
     nns = annoy_index.get_nns_by_vector(output_tensor[0],24,search_k=-1, include_distances=False)
-    object_strs = [loaded_dict['data'][str(nns[j])] for j in range(len(nns))]
-
-    return {"url_list":[f"{nns}"] }
+    object_strs = [ObjectId(loaded_dict['data'][str(nns[j])]) for j in range(len(nns))]
+    document = list(collection.find({'_id': {"$in":object_strs}}))
+    url_list = [doc["image_url_list"][0] for doc in document]
+    return {"url_list":url_list}
