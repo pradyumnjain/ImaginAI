@@ -1,27 +1,27 @@
-import { twMerge } from "tailwind-merge";
-import "./globals.css";
-import { Outfit } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import ReactQueryProvider from "@/components/ReactQueryProvider";
+import { twMerge } from 'tailwind-merge'
+import './globals.css'
+import { Outfit } from 'next/font/google'
+import ThemeProvider from '@/lib/ThemeProvider'
+import ReactQueryProvider from '@/lib/ReactQueryProvider'
 
-const fontFamily = Outfit({ subsets: ["latin"], weight: "variable" });
+const fontFamily = Outfit({ subsets: ['latin'], weight: 'variable' })
 
 export const metadata = {
-  title: "ImaginAI",
-  description: "",
-};
+  title: 'ImaginAI',
+  description: '',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body
         className={twMerge(
           fontFamily.className,
-          "h-full dark:text-white dark:bg-slate-950"
+          'h-full dark:bg-slate-950 dark:text-white'
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -29,5 +29,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

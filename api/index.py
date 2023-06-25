@@ -85,7 +85,7 @@ class search_image_response_model(BaseModel):
             }
         }
 
-@app.get("/api/search/image",response_model=search_image_response_model)
+@app.post("/api/search/image",response_model=search_image_response_model)
 def search_image(request_model:search_image_request_model):
     # get image
     image = Image.open(io.BytesIO(base64.b64decode(request_model.image.encode())))
@@ -125,7 +125,7 @@ class get_image_response_model(BaseModel):
             }
         }
 
-@app.get("/api/get/image",response_model=get_image_response_model)
+@app.post("/api/get/image",response_model=get_image_response_model)
 def get_image(request_model:get_image_request_model):
     # get name
     name = request_model.name
@@ -164,7 +164,7 @@ class get_home_response_model(BaseModel):
             }
         }
 
-@app.get("/api/get/home",response_model=get_home_response_model)
+@app.post("/api/get/home",response_model=get_home_response_model)
 def get_image(request_model:get_home_request_model):
     # get cursor
     cursor = request_model.cursor
