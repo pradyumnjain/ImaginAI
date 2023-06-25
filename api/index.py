@@ -50,6 +50,21 @@ object_index_path = "object_index.json"
 with open(object_index_path, "r") as file:
     loaded_dict = json.load(file)
 
+
+class health_check_response_model(BaseModel):
+    status: str = Field(description='status of the api')
+
+    class Config:
+        schema_extra = {
+            'example': {
+                "status": "ok",
+            }
+        }
+
+@app.get("/api/health-check",response_model=health_check_response_model)
+def health_check():
+    return {"status":"ok"}
+
 class search_image_request_model(BaseModel):
     image: str = Field(description='input image in base64 format')
 
@@ -70,7 +85,7 @@ class search_image_response_model(BaseModel):
             }
         }
 
-@app.get("/search/image",response_model=search_image_response_model)
+@app.get("/api/search/image",response_model=search_image_response_model)
 def search_image(request_model:search_image_request_model):
     # get image
     image = Image.open(io.BytesIO(base64.b64decode(request_model.image.encode())))
@@ -110,7 +125,7 @@ class get_image_response_model(BaseModel):
             }
         }
 
-@app.get("/get/image",response_model=get_image_response_model)
+@app.get("/api/get/image",response_model=get_image_response_model)
 def get_image(request_model:get_image_request_model):
     # get name
     name = request_model.name
@@ -145,7 +160,7 @@ class get_home_response_model(BaseModel):
             }
         }
 
-@app.get("/get/home",response_model=get_home_response_model)
+@app.get("/api/get/home",response_model=get_home_response_model)
 def get_image(request_model:get_home_request_model):
     # get cursor
     cursor = request_model.cursor

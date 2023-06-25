@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 import "./globals.css";
 import { Outfit } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const fontFamily = Outfit({ subsets: ["latin"], weight: "variable" });
 
@@ -17,9 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body className={twMerge(fontFamily.className, "h-full")}>
+      <body
+        className={twMerge(
+          fontFamily.className,
+          "h-full dark:text-white dark:bg-slate-950"
+        )}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <ReactQueryProvider>{children}</ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>
