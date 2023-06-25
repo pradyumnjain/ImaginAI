@@ -8,7 +8,10 @@ export default function ReactQueryProvider({
   children,
 }: PropsWithChildren<unknown>) {
   const [client] = useState(
-    new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } })
+    new QueryClient({
+      // 24 hours in milliseconds
+      defaultOptions: { queries: { staleTime: 1000 * 60 * 60 * 24 } },
+    })
   )
   return (
     // Provide the client to your App
