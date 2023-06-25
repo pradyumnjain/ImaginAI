@@ -12,7 +12,7 @@ export default function HealthCheck() {
     }
   );
   return (
-    <div className="text-sm bg-white/10 max-w-max px-3 py-1.5 flex items-center gap-2 rounded-full border border-white/50 absolute top-2 right-4">
+    <div className="text-sm bg-black/5 dark:bg-white/10 max-w-max px-3 py-1.5 flex items-center gap-2 rounded-full border border-black/10 dark:border-white/50 absolute top-2 right-4">
       API Health{" "}
       <div
         className={cn(
