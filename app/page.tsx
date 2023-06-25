@@ -1,9 +1,9 @@
-import HealthCheck from "@/components/HealthCheck";
+import HealthCheck from '@/components/HealthCheck'
 
 export default function Home() {
   return (
-    <main className="w-full h-full">
+    <main className="h-full w-full">
       <HealthCheck />
     </main>
-  );
+  )
 }

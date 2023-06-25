@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { PropsWithChildren } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { type PropsWithChildren } from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 export default function ReactQueryProvider({
   children,
@@ -12,5 +12,5 @@ export default function ReactQueryProvider({
   return (
     // Provide the client to your App
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  )
 }

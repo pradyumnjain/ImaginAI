@@ -1,12 +1,12 @@
 const routes = {
   healthCheck: {
-    path: "api/health-check",
-    method: "get",
+    path: 'api/health-check',
+    method: 'get',
     value: {
       // just a example response
-      status: "ok",
+      status: 'ok',
     },
   },
-} as const;
+} as const
 
-export default routes;
+export default routes
