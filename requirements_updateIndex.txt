@@ -7,3 +7,5 @@ python-dotenv
 tqdm
 joblib
 h5py
+transformers
+nltk
