@@ -1,5 +1,5 @@
 # ImaginAI
-- Stock Images Platform with Automated AI-Generated Image Scraping and rapid Search Capabilities through keywords and images
+Stock Images Platform with Automated AI-Generated Image Scraping and rapid Search Capabilities through keywords and images
 
 ## Introduction
 
