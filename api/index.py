@@ -134,7 +134,7 @@ def get_image(request_model:get_image_request_model):
     # get image
     image = download_image(urljoin(WASSABI_URI, name))
     # get base64
-    image_base64 = base64.b64encode(image.tobytes()).decode("utf-8")
+    image_base64 = base64.b64encode(image.tobytes())
     return {"image":image_base64}
 
 
