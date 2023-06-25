@@ -133,8 +133,12 @@ def get_image(request_model:get_image_request_model):
     WASSABI_URI = os.getenv('WASSABI_URI')
     # get image
     image = download_image(urljoin(WASSABI_URI, name))
-    # get base64
-    image_base64 = base64.b64encode(image.tobytes())
+    image_stream = io.BytesIO()
+    image.save(image_stream, format='WEBP')
+    # Retrieve the image data from the stream
+    image_data = image_stream.getvalue()
+    # Encode the image data as base64
+    image_base64 = base64.b64encode(image_data).decode('utf-8')
     return {"image":image_base64}
 
 
