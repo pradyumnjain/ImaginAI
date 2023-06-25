@@ -1,8 +1,8 @@
 import { twMerge } from 'tailwind-merge'
 import './globals.css'
 import { Outfit } from 'next/font/google'
-import { ThemeProvider } from '@/components/ThemeProvider'
-import ReactQueryProvider from '@/components/ReactQueryProvider'
+import ThemeProvider from '@/lib/ThemeProvider'
+import ReactQueryProvider from '@/lib/ReactQueryProvider'
 
 const fontFamily = Outfit({ subsets: ['latin'], weight: 'variable' })
 
