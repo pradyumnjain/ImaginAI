@@ -5,10 +5,10 @@ import { useQuery } from '@tanstack/react-query'
 
 export default function useHomeApi(
   variables: (typeof routes)['home']['variables'] = {
-    cursor: 0,
+    cursor: Math.floor(Math.random() * 2000),
   }
 ) {
-  const { data } = useQuery({
+  const results = useQuery({
     queryFn: async () => {
       return (await fetch(`/${routes.home.path}`, {
         headers: routes.home.headers,
@@ -19,5 +19,5 @@ export default function useHomeApi(
     queryKey: [routes.home.path, variables],
   })
 
-  return data
+  return { ...results }
 }
