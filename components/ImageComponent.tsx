@@ -1,19 +1,33 @@
 import useImageApi from '@/queries/useImageApi'
-// import Image from 'next/image'
+import Image from 'next/image'
+import { useState } from 'react'
 
 export default function ImageComponent({ url }: { url: string }) {
-  const image = useImageApi({ name: url })
-  if (!image?.image) return <></>
+  const { data } = useImageApi({ name: url })
+  const [paddingTop, setPaddingTop] = useState('0')
+  if (!data?.image)
+    return (
+      <div className="h-96 w-full animate-pulse rounded-xl bg-gray-200 dark:bg-slate-800" />
+    )
   return (
-    <div className="relative h-full min-h-[4rem] w-full min-w-[4rem]">
-      {/* <Image
-        alt={url}
-        src={`data:image/webp;base64,${image.image}`}
-        unoptimized
-        fill
-        loading="lazy"
-      /> */}
-      <img src={`data:image/webp;base64,${image.image}`} alt={url} />
-    </div>
+    <>
+      <div
+        className={'relative overflow-clip rounded-xl'}
+        style={{ paddingTop }}
+      >
+        <Image
+          alt={url}
+          src={`data:image/webp;base64,${data.image}`}
+          fill
+          style={{
+            objectFit: 'contain',
+          }}
+          onLoad={({ target }) => {
+            const { naturalWidth, naturalHeight } = target as HTMLImageElement
+            setPaddingTop(`calc(100% / (${naturalWidth} / ${naturalHeight})`)
+          }}
+        />
+      </div>
+    </>
   )
 }

@@ -9,8 +9,15 @@ export default function ReactQueryProvider({
 }: PropsWithChildren<unknown>) {
   const [client] = useState(
     new QueryClient({
-      // 24 hours in milliseconds
-      defaultOptions: { queries: { staleTime: 1000 * 60 * 60 * 24 } },
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false,
+          refetchOnMount: false,
+          refetchOnReconnect: false,
+          retry: false,
+          staleTime: 1000 * 60 * 60 * 24,
+        },
+      },
     })
   )
   return (

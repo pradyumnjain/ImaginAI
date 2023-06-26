@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 export default function useImageApi(
   variables: (typeof routes)['image']['variables']
 ) {
-  const { data } = useQuery({
+  const results = useQuery({
     queryFn: async () => {
       if (!variables.name) return
       return (await fetch(`/${routes.image.path}`, {
@@ -18,5 +18,5 @@ export default function useImageApi(
     queryKey: [routes.image.path, variables],
   })
 
-  return data
+  return { ...results }
 }
