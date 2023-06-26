@@ -2,10 +2,20 @@
 
 import HealthCheck from '@/components/HealthCheck'
 import ImageComponent from '@/components/ImageComponent'
+import useElementOnScreen from '@/lib/useElementOnScreen'
 import useHomeApi from '@/queries/useHomeApi'
+import { useEffect } from 'react'
 
 export default function Home() {
   const { data, fetchNextPage } = useHomeApi()
+  const { containerRef, isVisible } = useElementOnScreen<HTMLDivElement>({
+    root: null,
+    rootMargin: '0px',
+    threshold: 1.0,
+  })
+  useEffect(() => {
+    if (isVisible) void fetchNextPage()
+  }, [fetchNextPage, isVisible])
   return (
     <main className="h-full w-full">
       <HealthCheck />
@@ -27,12 +37,14 @@ export default function Home() {
             />
           ))}
       </div>
-      <button
-        className="mx-auto my-6 flex max-w-max items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1.5 text-sm dark:border-white/50 dark:bg-white/10"
-        onClick={() => void fetchNextPage()}
-      >
-        Fetch More (in development)
-      </button>
+      <div ref={containerRef} className="h-32 w-full">
+        <button
+          onClick={() => void fetchNextPage()}
+          className="mx-auto flex max-w-max items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1.5 text-sm dark:border-white/50 dark:bg-white/10"
+        >
+          Load more
+        </button>
+      </div>
     </main>
   )
 }
