@@ -17,7 +17,7 @@ export default function Home() {
         {!data &&
           Array.from({ length: 9 }).map((_, i) => (
             <div
-              className="h-96 w-full animate-pulse rounded-xl bg-gray-200"
+              className="h-96 w-full animate-pulse rounded-xl bg-gray-200 dark:bg-slate-800"
               key={i}
             />
           ))}
