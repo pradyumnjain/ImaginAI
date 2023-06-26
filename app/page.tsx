@@ -6,6 +6,8 @@ import useElementOnScreen from '@/lib/useElementOnScreen'
 import useHomeApi from '@/queries/useHomeApi'
 import { useEffect } from 'react'
 
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+
 export default function Home() {
   const { data, fetchNextPage } = useHomeApi()
   const { containerRef, isVisible } = useElementOnScreen<HTMLDivElement>({
@@ -17,26 +19,38 @@ export default function Home() {
     if (isVisible) void fetchNextPage()
   }, [fetchNextPage, isVisible])
   return (
-    <main className="h-full w-full">
+    <main className="flex h-full w-full flex-col px-8">
       <HealthCheck />
       <h1 className="my-16 py-10 text-center text-6xl font-bold">ImaginAI</h1>
-      <div className="max-w-8xl mx-auto mb-10 grid w-full grid-cols-1 gap-4 p-5 pb-10 sm:grid-cols-2 lg:grid-cols-4">
-        {data?.pages
-          .reduce(
-            (acc, current) => acc.concat(current.url_list),
-            [] as string[]
-          )
-          .map((url) => (
-            <ImageComponent key={url} url={url} />
-          ))}
-        {!data &&
-          Array.from({ length: 9 }).map((_, i) => (
-            <div
-              className="h-96 w-full animate-pulse rounded-xl bg-gray-200 dark:bg-slate-800"
-              key={i}
-            />
-          ))}
-      </div>
+      <ResponsiveMasonry
+        columnsCountBreakPoints={{
+          350: 1,
+          750: 2,
+          900: 3,
+          1200: 4,
+          1680: 6,
+          2160: 8,
+        }}
+        className="max-w-8xl"
+      >
+        <Masonry gutter="2rem">
+          {data?.pages
+            .reduce(
+              (acc, current) => acc.concat(current.url_list),
+              [] as string[]
+            )
+            .map((url) => (
+              <ImageComponent key={url} url={url} />
+            ))}
+          {!data &&
+            Array.from({ length: 9 }).map((_, i) => (
+              <div
+                className="h-96 w-full animate-pulse rounded-xl bg-gray-200 dark:bg-slate-800"
+                key={i}
+              />
+            ))}
+        </Masonry>
+      </ResponsiveMasonry>
       <div ref={containerRef} className="h-32 w-full">
         <button
           onClick={() => void fetchNextPage()}
