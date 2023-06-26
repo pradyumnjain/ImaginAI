@@ -54,7 +54,7 @@ export default function Home() {
       <div ref={containerRef} className="h-32 w-full">
         <button
           onClick={() => void fetchNextPage()}
-          className="mx-auto flex max-w-max items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1.5 text-sm dark:border-white/50 dark:bg-white/10"
+          className="mx-auto my-8 w-full text-center"
         >
           Load more
         </button>
