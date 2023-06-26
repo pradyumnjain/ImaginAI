@@ -10,7 +10,7 @@ export default function Home() {
     <main className="h-full w-full">
       <HealthCheck />
       <h1 className="my-16 py-10 text-center text-6xl font-bold">ImaginAI</h1>
-      <div className="mx-auto mb-10 w-full max-w-5xl columns-3 gap-5 space-y-5 p-5 pb-10">
+      <div className="max-w-8xl mx-auto mb-10 grid w-full grid-cols-1 gap-4 p-5 pb-10 sm:grid-cols-2 lg:grid-cols-4">
         {data?.pages
           .reduce(
             (acc, current) => acc.concat(current.url_list),

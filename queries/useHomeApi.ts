@@ -13,7 +13,7 @@ const fetchItems = async ({ cursor }: { cursor: number }) => {
 
 export default function useHomeApi() {
   const results = useInfiniteQuery({
-    queryFn: (v) => fetchItems({ cursor: (v.pageParam as number) ?? 0 }),
+    queryFn: (v) => fetchItems({ cursor: Number(v.pageParam) || 0 }),
     queryKey: [routes.home.path],
     getNextPageParam: (lastPage) => lastPage.next_cursor,
   })
