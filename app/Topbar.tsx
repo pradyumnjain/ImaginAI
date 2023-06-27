@@ -11,18 +11,18 @@ import { NavigationMenuLink } from '@radix-ui/react-navigation-menu'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const menuItems = [
+export const menuItems = [
   {
     label: 'Gallery',
     href: '/',
-    buttonColor: 'bg-sky-500/75 dark:bg-sky-700/75',
-    bgColor: 'bg-sky-950',
+    buttonColor: 'bg-slate-500/80 dark:bg-slate-700/80',
+    bgColor: 'bg-slate-950/10 dark:bg-slate-950/25',
   },
   {
     label: 'Image Search',
     href: '/image',
-    buttonColor: 'bg-rose-500/75 dark:bg-rose-700/75',
-    bgColor: 'bg-rose-950',
+    buttonColor: 'bg-rose-500/80 dark:bg-rose-700/80',
+    bgColor: 'bg-rose-950/10 dark:bg-rose-950/25',
   },
 ]
 

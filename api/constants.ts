@@ -33,6 +33,19 @@ const routes = {
       'Content-Type': 'application/json',
     },
   },
+  search: {
+    path: 'api/search/image',
+    method: 'post',
+    body: {
+      url_list: ['asd', 'asd'] as string[],
+    },
+    variables: {
+      image: '' as string,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  },
 } as const
 
 export default routes
