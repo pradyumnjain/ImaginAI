@@ -3,6 +3,7 @@ import './globals.css'
 import { Outfit } from 'next/font/google'
 import ThemeProvider from '@/lib/ThemeProvider'
 import ReactQueryProvider from '@/lib/ReactQueryProvider'
+import Topbar from './Topbar'
 
 const fontFamily = Outfit({ subsets: ['latin'], weight: 'variable' })
 
@@ -21,11 +22,13 @@ export default function RootLayout({
       <body
         className={twMerge(
           fontFamily.className,
-          'h-full dark:bg-slate-950 dark:text-white'
+          'h-full dark:bg-gray-950 dark:text-white'
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <ReactQueryProvider>
+            <Topbar>{children}</Topbar>
+          </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>

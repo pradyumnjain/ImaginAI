@@ -1,6 +1,5 @@
 'use client'
 
-import HealthCheck from '@/components/HealthCheck'
 import ImageComponent from '@/components/ImageComponent'
 import useElementOnScreen from '@/lib/useElementOnScreen'
 import useHomeApi from '@/queries/useHomeApi'
@@ -19,9 +18,7 @@ export default function Home() {
     if (isVisible) void fetchNextPage()
   }, [fetchNextPage, isVisible])
   return (
-    <main className="flex h-full w-full flex-col px-8">
-      <HealthCheck />
-      <h1 className="my-16 py-10 text-center text-6xl font-bold">ImaginAI</h1>
+    <>
       <ResponsiveMasonry
         columnsCountBreakPoints={{
           350: 1,
@@ -59,6 +56,6 @@ export default function Home() {
           Load more
         </button>
       </div>
-    </main>
+    </>
   )
 }
