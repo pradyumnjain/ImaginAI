@@ -9,6 +9,28 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import ImageComponent from '@/components/ImageComponent'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const MAX_FILE_SIZE = 3000000
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg']
+
+const FormSchema = z.object({
+  image: z
+    .any()
+    .refine(
+      (files: FileList) => files[0]?.size <= MAX_FILE_SIZE,
+      `File not selected or larger than 3MB.`
+    )
+    .refine(
+      (files: FileList) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
+      'Only .jpg, .jpeg formats are supported.'
+    ),
+})
+
+type FormInput = z.infer<typeof FormSchema>
+
 const fetchItems = async ({ image }: { image: string }) => {
   return (await fetch(`/${routes.search.path}`, {
     headers: routes.search.headers,
@@ -31,6 +53,12 @@ export default function ImagePage() {
   const [image, setImage] = useState<File | null>(null)
   const [searchImage, setSearchImage] = useState<string>('')
   const { data } = useSearchApi(searchImage)
+  const { register, formState, handleSubmit } = useForm<FormInput>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      image: [] as unknown as FileList,
+    },
+  })
   useEffect(() => {
     const run = async () => {
       const base64 = btoa(
@@ -86,17 +114,22 @@ export default function ImagePage() {
       ) : (
         <h2 className="grid gap-4 border-l border-l-black/50 py-4 pl-4 text-2xl font-light dark:border-l-white/50">
           Upload an image to search similar
-          <Input
-            type="file"
-            placeholder="Image"
-            className="border-l"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) {
-                setImage(file)
-              }
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              void handleSubmit((data) => {
+                const file = (data.image as FileList)[0]
+                if (file) setImage(file)
+              })(e)
             }}
-          />
+          >
+            <Input type="file" {...register('image')} />
+            <p className="text-sm text-red-500">
+              {formState.errors.image?.message?.toString()}
+            </p>
+            <Input type="submit" className="mt-4 w-fit" />
+          </form>
         </h2>
       )}
     </>
