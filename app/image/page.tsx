@@ -128,7 +128,10 @@ export default function ImagePage() {
             <p className="text-sm text-red-500">
               {formState.errors.image?.message?.toString()}
             </p>
-            <Input type="submit" className="mt-4 w-fit" />
+            <Input
+              type="submit"
+              className="mt-4 w-fit cursor-pointer hover:bg-black/10 dark:hover:bg-white/10"
+            />
           </form>
         </h2>
       )}
