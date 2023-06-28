@@ -13,19 +13,22 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const MAX_FILE_SIZE = 3000000
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg']
+import Resizer from 'react-image-file-resizer'
+
+// const MAX_FILE_SIZE = 5000000 // 5MB
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/webp',
+  'image/png',
+]
 
 const FormSchema = z.object({
   image: z
     .any()
     .refine(
-      (files: FileList) => files[0]?.size <= MAX_FILE_SIZE,
-      `File not selected or larger than 3MB.`
-    )
-    .refine(
       (files: FileList) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
-      'Only .jpg, .jpeg formats are supported.'
+      'Only .jpg, .jpeg, .png and .webp formats are supported.'
     ),
 })
 
@@ -49,6 +52,12 @@ function useSearchApi(image: string) {
   return { ...results }
 }
 
+const resizeFile = (
+  file: File,
+  callback: (image: string | File | Blob | ProgressEvent<FileReader>) => void
+) =>
+  Resizer.imageFileResizer(file, 224, 224, 'WEBP', 100, 0, callback, 'base64')
+
 export default function ImagePage() {
   const [image, setImage] = useState<File | null>(null)
   const [searchImage, setSearchImage] = useState<string>('')
@@ -60,15 +69,14 @@ export default function ImagePage() {
     },
   })
   useEffect(() => {
-    const run = async () => {
-      const base64 = btoa(
-        new Uint8Array(
-          (await image?.stream().getReader().read())?.value as ArrayBuffer
-        ).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      )
-      setSearchImage(base64)
+    const run = () => {
+      if (image) {
+        resizeFile(image, (image) => {
+          if (typeof image === 'string') setSearchImage(image.split(',')[1])
+        })
+      }
     }
-    run().catch(console.error)
+    run()
   }, [image])
   return (
     <>
