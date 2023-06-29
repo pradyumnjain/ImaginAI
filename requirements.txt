@@ -1,7 +1,0 @@
-fastapi==0.95.2
-uvicorn[standard]
-torch
-torchvision
-torchaudio
-annoy
-pymongo
