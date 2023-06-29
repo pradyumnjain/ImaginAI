@@ -15,7 +15,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import Resizer from 'react-image-file-resizer'
 
-// const MAX_FILE_SIZE = 5000000 // 5MB
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
