@@ -1,5 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+.venv
 vector_index.h5
 .env
 api/__pycache__/

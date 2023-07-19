@@ -2,6 +2,10 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "ms-python.black-formatter",
+    "ms-python.vscode-pylance",
+    "ms-python.pylint",
+    "ms-python.python"
   ]
 }
