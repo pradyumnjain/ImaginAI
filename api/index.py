@@ -27,30 +27,7 @@ client = MongoClient(MONGO_URI)
 db = client["ImaginAI"]
 collection = db["stock_data"]
 
-# Load model
-weights = models.ResNet18_Weights.IMAGENET1K_V1
-model = models.resnet18(weights=weights)
-
-model.fc = nn.Identity()
-
-model.eval()
-
-# define transform
-transform = transforms.Compose([
-    transforms.Resize((224,224)),
-    transforms.ToTensor()
-])
-
-# load index
-annoy_index = AnnoyIndex(512, 'angular')
-annoy_index.load("./annoy_index.ann")
-
-# Load Json
-object_index_path = "object_index.json"
-with open(object_index_path, "r") as file:
-    loaded_dict = json.load(file)
-
-
+# Health Check API
 class health_check_response_model(BaseModel):
     status: str = Field(description='status of the api')
 
@@ -65,13 +42,17 @@ class health_check_response_model(BaseModel):
 def health_check():
     return {"status":"ok"}
 
+# Search Image API
 class search_image_request_model(BaseModel):
-    image: str = Field(description='input image in base64 format')
-
+    objectid: str = Field(description='ObjectID'),
+    limit: int = Field(description='number of images to return',default=24),
+    skip: int = Field(description='number of images to skip',default=0)
     class Config:
         schema_extra = {
             'example': {
-                "image": "/9j/4AAQSkZJRgABAQEASABIAAD//gA7Q1JFQVRPUjogZ2QtanBlZy.......",
+                "objectid": "641d6e4592e339fcd4169e6a",
+                "limit":0,
+                "skip":24
             }
         }
 
@@ -81,25 +62,46 @@ class search_image_response_model(BaseModel):
     class Config:
         schema_extra = {
             'example': {
-                "url_list": ["asd","asd"],
+                "url_list": ["{asd}","{asd}"],
             }
         }
 
+def SearchImage(collection=None,vector=[],skip=0,limit=24):
+    query = [
+                {
+                        "$search": {
+                            "index": "search_image",
+                            "knnBeta": {
+                            "vector": vector,
+                            "path": "content_embedding",
+                            "k": 2000
+                            }
+                        }
+                },
+                {
+                "$skip": skip
+                },
+                {
+                "$limit": limit
+                }
+            ]
+    result = collection.aggregate(query)
+    result_list = [doc['image_url_list'][0].split("/")[-1] for doc in result]
+    return result_list
+
 @app.post("/api/search/image",response_model=search_image_response_model)
 def search_image(request_model:search_image_request_model):
-    # get image
-    image = Image.open(io.BytesIO(base64.b64decode(request_model.image.encode())))
-    # get transform
-    input_tensor = transform(image).unsqueeze(0)
-    # get embedding
-    output_tensor = model(input_tensor)
-    # Get index
-    nns = annoy_index.get_nns_by_vector(output_tensor[0],24,search_k=-1, include_distances=False)
-    object_strs = [ObjectId(loaded_dict['data'][str(nns[j])]) for j in range(len(nns))]
-    documents = list(collection.find({'_id': {"$in":object_strs}}))
-    url_list = [doc["image_url_list"][0].split("/")[-1] for doc in documents]
-    return {"url_list":url_list}
+    # get object_id
+    object_id = request_model.objectid
+    skip = request_model.skip
+    limit = request_model.limit
+    # get image vector
+    vector = collection.find({"_id":ObjectId(object_id)},{"content_embedding"})[0]['content_embedding']
+    # get similar images
+    documents = SearchImage(collection,vector,skip=skip,limit=limit)
+    return {"url_list":documents}
 
+# Get Image (download) API
 def download_image(url):
     response = requests.get(url)
     image = Image.open(io.BytesIO(response.content))
@@ -141,7 +143,7 @@ def get_image(request_model:get_image_request_model):
     image_base64 = base64.b64encode(image_data).decode('utf-8')
     return {"image":image_base64}
 
-
+# Get Home Images API
 class get_home_request_model(BaseModel):
     cursor: int = Field(description='random int seed')
 

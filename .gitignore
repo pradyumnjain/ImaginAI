@@ -4,6 +4,8 @@ vector_index.h5
 .env
 api/__pycache__/
 
+test_images
+
 # dependencies
 /node_modules
 /.pnp
